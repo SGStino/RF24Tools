@@ -12,6 +12,7 @@ TMRh20 2014 - Optimized RF24 Library Fork
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm> 
 #include "RF24/RF24.h" 
 
 
@@ -126,8 +127,17 @@ int main(int argc, char** argv) {
 
 		if (role == role_ping_out)
 		{
+			string inputPayload = "";
+			cout << "Enter payload: \n>";
+			getline(cin, input);
+
+			next_payload_size = inputPayload.length();
+			next_payload_size = min(max_payload_size, next_payload_size);
+
 			// The payload will always be the same, what will change is how much of it we send.
-			static char send_payload[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
+			char send_payload[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
+
+			inputPayload.copy(send_payload, next_payload_size, 0);
 
 			// First, stop listening so we can talk.
 			radio.stopListening();
